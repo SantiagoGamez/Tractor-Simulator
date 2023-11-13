@@ -31,6 +31,12 @@ public class MovementHandler : MonoBehaviour
 
         // Move the object smoothly to the target position
         transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime);
+
+        if (targetPosition != Vector3.zero)
+        {
+            transform.forward = targetPosition;
+        }
+
     }
 
     void UpdateTargetPosition()
