@@ -15,6 +15,7 @@ public class MovementHandler : MonoBehaviour
     private string lastJsonText;
     private Vector3 targetPosition;
 
+
     void Start()
     {
         lastJsonText = jsonText;
@@ -29,13 +30,19 @@ public class MovementHandler : MonoBehaviour
             UpdateTargetPosition();
         }
 
+        // Calculate the direction of movement
+        Vector3 direction = (targetPosition - transform.position).normalized;
+
+        if (direction != Vector3.zero)
+        {
+            Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
+            transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 10);
+        }
+
         // Move the object smoothly to the target position
         transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime);
 
-        if (targetPosition != Vector3.zero)
-        {
-            transform.forward = targetPosition;
-        }
+
 
     }
 
