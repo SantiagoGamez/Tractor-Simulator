@@ -1,6 +1,6 @@
 // Tractor movement handler
 // JSON data format:
-// {"X_COORDINATE": 0.0, "Y_COORDINATE": 0.0, "Z_COORDINATE": 0.0 }
+// {"X_COORDINATE": 0.0, "Z_COORDINATE": 0.0 }
 
 
 using UnityEngine;
@@ -10,7 +10,6 @@ using System;
 public class PositionData
 {
     public float X_COORDINATE;
-    public float Y_COORDINATE;
     public float Z_COORDINATE;
 }
 
@@ -54,6 +53,20 @@ public class TraMovementHandler : MonoBehaviour
     void UpdateTargetPosition()
     {
         PositionData data = JsonUtility.FromJson<PositionData>(jsonText);
-        targetPosition = new Vector3(data.X_COORDINATE, data.Y_COORDINATE, data.Z_COORDINATE);
+        Vector3 targetPositionXZ = new Vector3(data.X_COORDINATE, 0, data.Z_COORDINATE);
+
+        // Cast a ray downwards from the target XZ position
+        RaycastHit hit;
+        if (Physics.Raycast(targetPositionXZ + Vector3.up * 1000, Vector3.down, out hit))
+        {
+            // If the ray hits the terrain, set the target position to the hit point
+            targetPosition = hit.point;
+        }
+        else
+        {
+            // If the ray does not hit the terrain, keep the current Y position
+            targetPosition = new Vector3(data.X_COORDINATE, transform.position.y, data.Z_COORDINATE);
+        }
     }
+
 }
