@@ -1,6 +1,6 @@
 // Harvester movement handler
 // JSON data format:
-// { "coordinates": [ {"X_COORDINATE": 10.0, "Y_COORDINATE": 0.01, "Z_COORDINATE": 10.0 }, {"X_COORDINATE": 100.0, "Y_COORDINATE": 0.01, "Z_COORDINATE": 0.0 }, {"X_COORDINATE": 100.0, "Y_COORDINATE": 0.01, "Z_COORDINATE": 100.0 }, {"X_COORDINATE": 10.0, "Y_COORDINATE": 0.01, "Z_COORDINATE": 10.0 }, {"X_COORDINATE": 50.0, "Y_COORDINATE": 0.01, "Z_COORDINATE": 50.0 }, {"X_COORDINATE": 75.0, "Y_COORDINATE": 0.01, "Z_COORDINATE": 25.0 } ] }
+// { "coordinates": [ {"X_COORDINATE": 10.0, "Z_COORDINATE": 10.0 }, {"X_COORDINATE": 100.0, "Z_COORDINATE": 0.0 }, {"X_COORDINATE": 100.0, "Z_COORDINATE": 100.0 }, {"X_COORDINATE": 10.0, "Z_COORDINATE": 10.0 }, {"X_COORDINATE": 50.0, "Z_COORDINATE": 50.0 }, {"X_COORDINATE": 75.0, "Z_COORDINATE": 25.0 } ] }
 
 
 using UnityEngine;
@@ -11,7 +11,6 @@ using System.Collections.Generic;
 public class PositionData
 {
     public float X_COORDINATE;
-    public float Y_COORDINATE;
     public float Z_COORDINATE;
 }
 [Serializable]
@@ -65,17 +64,22 @@ public class MovementHandler : MonoBehaviour
         }
     }
 
-    void UpdateTargetPositions()
+        void UpdateTargetPosition()
     {
-        PositionDataList dataList = JsonUtility.FromJson<PositionDataList>(jsonText);
-        if (dataList != null && dataList.coordinates != null)
+        PositionData data = JsonUtility.FromJson<PositionData>(jsonText);
+        Vector3 targetPositionXZ = new Vector3(data.X_COORDINATE, 0, data.Z_COORDINATE);
+
+        // Cast a ray downwards from the target XZ position
+        RaycastHit hit;
+        if (Physics.Raycast(targetPositionXZ + Vector3.up * 1000, Vector3.down, out hit))
         {
-            targetPositions.Clear();
-            foreach (PositionData data in dataList.coordinates)
-            {
-                Vector3 position = new Vector3(data.X_COORDINATE, data.Y_COORDINATE, data.Z_COORDINATE);
-                targetPositions.Add(position);
-            }
+            // If the ray hits the terrain, set the target position to the hit point
+            targetPosition = hit.point;
+        }
+        else
+        {
+            // If the ray does not hit the terrain, keep the current Y position
+            targetPosition = new Vector3(data.X_COORDINATE, transform.position.y, data.Z_COORDINATE);
         }
     }
 
