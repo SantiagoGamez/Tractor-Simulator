@@ -20,7 +20,7 @@ public class PositionDataList
 }
 
 
-public class MovementHandler : MonoBehaviour
+public class HarMovementHandler : MonoBehaviour
 {
     public string jsonText;
     private string lastJsonText;
@@ -50,7 +50,7 @@ public class MovementHandler : MonoBehaviour
             if (direction != Vector3.zero)
             {
                 Quaternion toRotation = Quaternion.LookRotation(direction, Vector3.up);
-                transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 5);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, 10);
             }
             // Move the object towards the current target position
             transform.position = Vector3.MoveTowards(transform.position, targetPositions[currentTargetIndex], movementSpeed * Time.deltaTime);
@@ -64,22 +64,17 @@ public class MovementHandler : MonoBehaviour
         }
     }
 
-        void UpdateTargetPosition()
+    void UpdateTargetPositions()
     {
-        PositionData data = JsonUtility.FromJson<PositionData>(jsonText);
-        Vector3 targetPositionXZ = new Vector3(data.X_COORDINATE, 0, data.Z_COORDINATE);
-
-        // Cast a ray downwards from the target XZ position
-        RaycastHit hit;
-        if (Physics.Raycast(targetPositionXZ + Vector3.up * 1000, Vector3.down, out hit))
+        PositionDataList dataList = JsonUtility.FromJson<PositionDataList>(jsonText);
+        if (dataList != null && dataList.coordinates != null)
         {
-            // If the ray hits the terrain, set the target position to the hit point
-            targetPosition = hit.point;
-        }
-        else
-        {
-            // If the ray does not hit the terrain, keep the current Y position
-            targetPosition = new Vector3(data.X_COORDINATE, transform.position.y, data.Z_COORDINATE);
+            targetPositions.Clear();
+            foreach (PositionData data in dataList.coordinates)
+            {
+                Vector3 position = new Vector3(data.X_COORDINATE, transform.position.y, data.Z_COORDINATE);
+                targetPositions.Add(position);
+            }
         }
     }
 

@@ -6,13 +6,6 @@
 using UnityEngine;
 using System;
 
-[Serializable]
-public class PositionData
-{
-    public float X_COORDINATE;
-    public float Z_COORDINATE;
-}
-
 public class TraMovementHandler : MonoBehaviour
 {
     public string jsonText;
