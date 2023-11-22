@@ -43,6 +43,7 @@ Para activar el entorno virtual que se encuentra en el archivo, ejecuta el sigui
 ```bash
 source .venv/bin/activate
 ```
+Si por tener windows tienes fallas al conectarlo, en la barra superior entra a View>Command Pallete y en la barra de busqueda pon: "Python: Create Enviorment".
 
 ### 3. Instalación de bibliotecas
 
@@ -50,6 +51,7 @@ Para ejecutar el código, necesitarás instalar algunas bibliotecas mediante el 
 ```bash
 python3 -m pip install Flask agentpy numpy matplotlib
 ```
+Si te aparece error y no reconoce "python3", intenta con "python" o "py".
 
 ### 4. Iniciar el servidor de desarrollo
 
@@ -57,7 +59,7 @@ Para acceder a tu aplicación web Flask en tu navegador web visitando el puerto 
 ```bash
 python3 -m flask run
 ```
-
+Si te aparece error y no reconoce "python3", intenta con "python" o "py".
 
 
 
