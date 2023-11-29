@@ -111,11 +111,11 @@ def run_simulation():
 
     for idx, tractor in enumerate(model.tractors, 1):
         coordinates = [
-            {"X_COORDINATE": float(x), "Z_COORDINATE": float(y)} for x, y in tractor.area_to_cut
+            {"X_COORDINATE": float(x)*10, "Z_COORDINATE": float(y)*10} for x, y in tractor.area_to_cut
         ]
         # Add the initial position to the beginning of the list
         coordinates.insert(
-            0, {"X_COORDINATE": float(tractor.x), "Z_COORDINATE": float(tractor.y)}
+            0, {"X_COORDINATE": float(tractor.x)*10, "Z_COORDINATE": float(tractor.y)*10}
         )
 
         tractor_info["harvester" + str(idx)] = coordinates
@@ -124,7 +124,7 @@ def run_simulation():
         "data": tractor_info
     }
 
-    return jsonify(data)
+    return jsonify(tractor_info)
 
 if __name__ == "__main__":
     app.run(debug=True)
