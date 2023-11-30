@@ -1,0 +1,30 @@
+using UnityEngine;
+
+public class CropHarvester1 : MonoBehaviour
+{
+    public static int cropCount = 0;
+
+    public static bool isHarvesterFull = false;
+
+    void Update()
+    {
+        if (cropCount >= 300)
+        {
+            isHarvesterFull = true;
+        }
+        else
+        {
+            isHarvesterFull = false;
+        }
+    }
+    void OnCollisionEnter(Collision col)
+    {
+        if (col.gameObject.tag == "Crop")
+        {
+            Debug.Log("Collision detected with Crop");
+            Destroy(col.gameObject);
+            cropCount++;
+            Debug.Log("Crop count: " + cropCount);
+        }
+    }
+}
